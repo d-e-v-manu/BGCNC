@@ -1,55 +1,123 @@
-let displayValue = '0';
-let operator = '';
-let previousValue = 0;
+let historyArray = [];
 
-// Taschenrechner
+// Lade Historie aus LocalStorage beim Start
+window.addEventListener('DOMContentLoaded', () => {
+    loadHistory();
+    updateHistoryDisplay();
+});
+
 function appendToDisplay(value) {
-    if (displayValue === '0' && value !== '.') displayValue = value;
-    else displayValue += value;
-    document.getElementById('display').textContent = displayValue;
-}
-
-function clearDisplay() {
-    displayValue = '0';
-    document.getElementById('display').textContent = '0';
-}
-
-function calculate() {
-    try {
-        displayValue = eval(displayValue.replace('×', '*')).toString();
-        document.getElementById('display').textContent = displayValue;
-    } catch {
-        displayValue = 'Fehler';
-        document.getElementById('display').textContent = 'Fehler';
+    const display = document.getElementById('display');
+    if (display.value === '0' || display.value === '') {
+        display.value = value;
+    } else {
+        display.value += value;
     }
 }
 
-// Größenrechner (wie vorher)
-function berechneQuader() {
-    const l = parseFloat(document.getElementById('quaderL').value) || 0;
-    const b = parseFloat(document.getElementById('quaderB').value) || 0;
-    const h = parseFloat(document.getElementById('quaderH').value) || 0;
-    const v = l*b*h, f = 2*(l*b + l*h + b*h);
-    document.getElementById('groessenErgebnis').innerHTML = `Volumen: ${v.toFixed(1)} cm³ | Fläche: ${f.toFixed(1)} cm²`;
+function clearDisplay() {
+    document.getElementById('display').value = '';
 }
 
-function berechneZylinder() {
-    const r = parseFloat(document.getElementById('zylR').value) || 0;
-    const h = parseFloat(document.getElementById('zylH').value) || 0;
-    const v = Math.PI * r*r * h, f = 2 * Math.PI * r * (r + h);
-    document.getElementById('groessenErgebnis').innerHTML = `Volumen: ${v.toFixed(1)} cm³ | Fläche: ${f.toFixed(1)} cm²`;
+function deleteLastChar() {
+    const display = document.getElementById('display');
+    display.value = display.value.slice(0, -1);
 }
 
-// Theme Toggle
-document.getElementById('themeToggle').onclick = () => {
-    document.body.classList.toggle('dark');
-    document.body.classList.toggle('light');
-};
+function calculate() {
+    const display = document.getElementById('display');
+    const expression = display.value;
+    
+    if (!expression) return;
+    
+    try {
+        // Berechne das Ergebnis
+        const result = eval(expression);
+        
+        // Füge zur Historie hinzu
+        addToHistory(expression, result);
+        
+        // Zeige Ergebnis an
+        display.value = result;
+        
+    } catch (error) {
+        display.value = 'Fehler';
+        setTimeout(() => {
+            display.value = '';
+        }, 1500);
+    }
+}
 
-// Responsive Echtzeit
-window.onload = () => {
-    document.querySelectorAll('input').forEach(input => input.addEventListener('input', () => {
-        if (input.id.includes('quader') || input.id.includes('zyl')) berechneQuader() || berechneZylinder();
-    }));
-};
+function addToHistory(expression, result) {
+    const historyItem = {
+        expression: expression,
+        result: result,
+        timestamp: new Date().toLocaleString('de-DE')
+    };
+    
+    // Füge am Anfang hinzu (neueste zuerst)
+    historyArray.unshift(historyItem);
+    
+    // Begrenze auf 10 Einträge
+    if (historyArray.length > 10) {
+        historyArray.pop();
+    }
+    
+    // Speichere in LocalStorage
+    saveHistory();
+    
+    // Aktualisiere Anzeige
+    updateHistoryDisplay();
+}
+
+function updateHistoryDisplay() {
+    const historyList = document.getElementById('history-list');
+    
+    if (historyArray.length === 0) {
+        historyList.innerHTML = '<p class="empty-message">Keine Berechnungen vorhanden</p>';
+        return;
+    }
+    
+    historyList.innerHTML = historyArray.map(item => `
+        <div class="history-item" onclick="loadCalculation('${item.expression}')">
+            <div class="history-expression">${item.expression}</div>
+            <div class="history-result">= ${item.result}</div>
+        </div>
+    `).join('');
+}
+
+function loadCalculation(expression) {
+    document.getElementById('display').value = expression;
+}
+
+function clearHistory() {
+    if (historyArray.length === 0) return;
+    
+    if (confirm('Möchten Sie die gesamte Historie löschen?')) {
+        historyArray = [];
+        saveHistory();
+        updateHistoryDisplay();
+    }
+}
+
+function saveHistory() {
+    localStorage.setItem('calculatorHistory', JSON.stringify(historyArray));
+}
+
+function loadHistory() {
+    const saved = localStorage.getItem('calculatorHistory');
+    if (saved) {
+        historyArray = JSON.parse(saved);
+    }
+}
+
+// Enter-Taste für Berechnung
+document.addEventListener('DOMContentLoaded', () => {
+    const display = document.getElementById('display');
+    display.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            calculate();
+        }
+    });
+});
 
