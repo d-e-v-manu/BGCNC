@@ -1,52 +1,62 @@
-body {
-    font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    margin: 0;
-    padding: 20px;
-    color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body { 
+    font-family: 'Segoe UI', sans-serif; 
+    transition: background 0.3s, color 0.3s;
 }
 
-.container {
-    text-align: center;
-    background: rgba(255, 255, 255, 0.1);
-    padding: 40px;
-    border-radius: 20px;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-    max-width: 500px;
+body.light { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #333; }
+body.dark { background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); color: #ecf0f1; }
+
+.app-container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+header { 
+    display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; 
+}
+h1 { font-size: clamp(1.5rem, 5vw, 2.5rem); }
+#themeToggle { padding: 10px 20px; border: none; border-radius: 25px; cursor: pointer; background: rgba(255,255,255,0.2); color: white; }
+
+.main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+
+.calc-section { 
+    background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); 
+    padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
+}
+h2 { text-align: center; margin-bottom: 20px; color: white; }
+
+.display { 
+    background: rgba(0,0,0,0.3); color: white; padding: 20px; 
+    font-size: clamp(1.5rem, 8vw, 3rem); text-align: right; border-radius: 10px; 
+    margin-bottom: 20px; min-height: 60px; display: flex; align-items: center; justify-content: flex-end; 
 }
 
-h1 {
-    font-size: 2em;
-    margin-bottom: 10px;
+.buttons-grid { 
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; 
+}
+.inputs-grid { display: grid; grid-template-columns: 2fr 2fr 1fr; gap: 10px; margin-bottom: 15px; }
+
+.btn-clear { background: #e74c3c !important; }
+.equals-btn { background: #27ae60 !important; grid-row: span 2; }
+.num-btn, button { 
+    padding: 20px; border: none; border-radius: 15px; font-size: 1.2rem; 
+    cursor: pointer; transition: all 0.2s; background: rgba(255,255,255,0.2); color: white; 
+}
+button:hover, .num-btn:hover { transform: scale(1.05); background: rgba(255,255,255,0.4); }
+
+input { 
+    padding: 15px; border: 2px solid rgba(255,255,255,0.3); border-radius: 10px; 
+    background: rgba(255,255,255,0.1); color: white; font-size: 1rem; 
+}
+input::placeholder { color: rgba(255,255,255,0.7); }
+
+.ergebnis { 
+    background: rgba(39,174,96,0.3); padding: 20px; border-radius: 10px; 
+    font-size: 1.2rem; font-weight: bold; min-height: 60px; display: flex; align-items: center; 
+    justify-content: center; 
 }
 
-button {
-    background: #ff6b6b;
-    color: white;
-    border: none;
-    padding: 15px 30px;
-    font-size: 1.2em;
-    border-radius: 50px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-}
-
-button:hover {
-    transform: scale(1.05);
-    background: #ff5252;
-}
-
-button:active {
-    transform: scale(0.98);
-}
-
-#info {
-    margin-top: 20px;
-    font-style: italic;
+@media (max-width: 768px) {
+    .main-grid { grid-template-columns: 1fr; gap: 20px; }
+    .buttons-grid { grid-template-columns: repeat(4, 1fr); }
+    .inputs-grid { grid-template-columns: 1fr; }
 }

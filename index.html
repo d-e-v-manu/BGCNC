@@ -3,15 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meine Test-Seite</title>
+    <title>Service Tool Pro – Rechner & Taschenrechner</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Hallo! Das ist eine statische JS-Seite</h1>
-        <p>Klicke auf den Button, um den Zähler zu erhöhen. Farbe wechselt automatisch.</p>
-        <button id="counterBtn">Klick mich! (0)</button>
-        <p id="info">Bereit zum Testen...</p>
+    <div class="app-container">
+        <header>
+            <h1>🛠️ Service Tool Pro</h1>
+            <button id="themeToggle">🌙 Dark Mode</button>
+        </header>
+
+        <div class="main-grid">
+            <!-- Taschenrechner -->
+            <section class="calc-section">
+                <h2>📱 Taschenrechner</h2>
+                <div class="display" id="display">0</div>
+                <div class="buttons-grid">
+                    <button class="btn-clear" onclick="clearDisplay()">C</button>
+                    <button onclick="appendToDisplay('/')">/</button>
+                    <button onclick="appendToDisplay('*')">×</button>
+                    <button onclick="appendToDisplay('-')">-</button>
+                    <button class="num-btn" onclick="appendToDisplay('7')">7</button>
+                    <button class="num-btn" onclick="appendToDisplay('8')">8</button>
+                    <button class="num-btn" onclick="appendToDisplay('9')">9</button>
+                    <button onclick="appendToDisplay('+')">+</button>
+                    <button class="num-btn" onclick="appendToDisplay('4')">4</button>
+                    <button class="num-btn" onclick="appendToDisplay('5')">5</button>
+                    <button class="num-btn" onclick="appendToDisplay('6')">6</button>
+                    <button class="equals-btn" onclick="calculate()" rowspan="2">=</button>
+                    <button class="num-btn" onclick="appendToDisplay('1')">1</button>
+                    <button class="num-btn" onclick="appendToDisplay('2')">2</button>
+                    <button class="num-btn" onclick="appendToDisplay('3')">3</button>
+                    <button class="num-btn" onclick="appendToDisplay('0')" style="grid-column: span 2;">0</button>
+                    <button class="num-btn" onclick="appendToDisplay('.')">.</button>
+                </div>
+            </section>
+
+            <!-- Größenrechner -->
+            <section class="calc-section">
+                <h2>📐 Größenrechner</h2>
+                <div class="inputs-grid">
+                    <input type="number" id="quaderL" placeholder="Quader Länge">
+                    <input type="number" id="quaderB" placeholder="Breite">
+                    <input type="number" id="quaderH" placeholder="Höhe">
+                    <button onclick="berechneQuader()">Quader</button>
+                    <input type="number" id="zylR" placeholder="Zyl. Radius">
+                    <input type="number" id="zylH" placeholder="Höhe">
+                    <button onclick="berechneZylinder()">Zylinder</button>
+                </div>
+                <div class="ergebnis" id="groessenErgebnis"></div>
+            </section>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>
